@@ -4,7 +4,7 @@
 ## EL5852 Introducción al Reconocimiento de Patrones
 ## Escuela de Ingeniería Electrónica
 ## Tecnológico de Costa Rica
-
+#pspsps
 
 ## usage plot_data(X,Y,mono)
 ##
