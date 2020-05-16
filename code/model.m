@@ -114,7 +114,7 @@ classdef model < handle
         
         disp(["Epoca: ", num2str(i),"/",num2str(s.epochs),"  J: ",num2str(J)]);
       endfor
-      plot_loss(numEpochs,Jacumulados);
+      plot_loss(numEpochs,Jacumulados); ##Grafica el error vs epocas
     endfunction
     
     ##Funcion para el test
