@@ -2,29 +2,24 @@
 
 classdef momentum < handle
   properties
-    gradient = [];
-    
-    Vold = [];
-    
-    Vnew = [];
-    
     beta = 0;
+    vOld = [];
   endproperties
   
   methods
-    function s = momentum()
-      s.gradient = [];
-      s.Vold = [];
-      s.Vnew = [];
+    function s = momentum(beta)
       s.beta = 0;
+      s.vOld = [];
     endfunction
     
-    function vt1 = filtro(s,gradientW,vt0,beta)
-      s.gradient = gradientW;
-      s.beta = beta;
-      s.Vold = vt0;
-      s.Vnew = beta .* vt0 + (1 - beta) .* gradientW;
-      vt1 = s.Vnew;
+    #en la primera iteracion deja no hay filtro
+    function v = filtro(s, gradientW)
+      if (isempty(s.vOld))
+        s.vOld = gradientW;
+      else 
+        s.vOld = s.beta .* s.vOld + (1 - s.beta) .* gradientW;
+      endif
+      v = s.vOld;
     endfunction
   endmethods
 endclassdef

@@ -1,4 +1,4 @@
-##Prueba de red neuronal de 3 capas con momentum
+##Prueba de red neuronal de 3 capas con ADAM
 #Prueba de red neuronal con 3 caps
 clc;
 clear;
@@ -14,7 +14,6 @@ numDatos = 1000;#cantidad de datos de set de entrenamiento
 
 ## Creacion de datos, carga las matrices usadas sin momentum
 load("XYtrains.dat")
-
 
 ## Capa 1
 l1a = fullyConnectedBiased(); #combinacion
@@ -34,13 +33,16 @@ neurons3 = clases;   #la ultima capa debe tener #neuronas = #clases
 
 
 ## Capa de calculo de error
-l4 = MSE();
+l4 = cross_entropy();
 
-## Momentum
+## ADAM
 beta = 0.9;
-mtm1 = momentum(beta);
-mtm2 = momentum(beta);
-mtm3 = momentum(beta);
+beta2 = 0.99;
+
+mtm1 = ADAM(beta, beta2);
+mtm2 = ADAM(beta, beta2);
+mtm3 = ADAM(beta, beta2);
+beta = 0.9;
 
 ## Se inicializan las matrices de pesos
 dimension = columns(Xraw);
@@ -49,11 +51,15 @@ W1 = rand(neurons1, dimension + 1); #se suma 1 por el sesgo
 W2 = rand(neurons2, neurons1 + 1); #las columnas siempre es: cant. neuronas
                                    #anteriores + 1
 W3 = rand(neurons3, neurons2 + 1);
-                                                                  
-     
+                                   
 ## Para el plot del error
 Jacumulados = [];
 numEpocas = [];
+
+##Vectores del momentum
+v01 = rand(5,3);
+v02 = rand(3,6);
+v03 = rand(3,4);
 
 for (i=1:epocas) #se itera segun cierta cantidad de epocas
   
@@ -89,10 +95,10 @@ for (i=1:epocas) #se itera segun cierta cantidad de epocas
     l1a.backward(l1b.gradient);
 
     ## Calculo de pesos
-    W1 = W1 - alpha * mtm1.filtro(l1a.gradientW);
-    W2 = W2 - alpha * mtm2.filtro(l2a.gradientW);
-    W3 = W3 - alpha * mtm3.filtro(l3a.gradientW);
-  
+    W1 = W1 - alpha*mtm1.filtro(l1a.gradientW);
+    W2 = W2 - alpha*mtm2.filtro(l2a.gradientW);
+    W3 = W3 - alpha*mtm3.filtro(l3a.gradientW);
+   
   endfor
   
   ## Calculo de error

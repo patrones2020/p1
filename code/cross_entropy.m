@@ -30,14 +30,19 @@ classdef cross_entropy < handle
       s.inputsYpred = Ypred;
       s.inputsY = Y;
       
+      #{
       grad = Y;
+      
       for(i = 1: columns(Y))
         for(j = 1: rows(Y))
           grad(j,i) = -(1/rows(Y) * (Y(j,i) / Ypred(j,i)));
         endfor
       endfor
-      
       s.gradient = grad;
+      #}
+      
+      s.gradient = (Y ./ Ypred)./-rows(Y);
+      
       y = s.gradient;
     endfunction
     
