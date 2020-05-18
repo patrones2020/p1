@@ -23,6 +23,8 @@ classdef model < handle
     lf = MSE(); #layer final, para calculo de error de entrenamiento
     lfVal = MSE(); #layer final, para calculo de error de validacion
     
+    opt = "pure"; #metodo de optimizacion
+    
     #Pesos
     W1 = [];
     W2 = [];
@@ -124,10 +126,22 @@ classdef model < handle
           s.l1a.backward(s.l1b.gradient);
           
           ## Calculo de pesos
-          s.W1 = s.W1 - s.alpha*s.dsc1.momentum(s.l1a.gradientW);
-          s.W2 = s.W2 - s.alpha*s.dsc2.momentum(s.l2a.gradientW);
-          s.W3 = s.W3 - s.alpha*s.dsc3.momentum(s.l3a.gradientW);
-          s.W4 = s.W4 - s.alpha*s.dsc4.momentum(s.l4a.gradientW);
+          if (strcmp(s.opt,"momentum"))
+            s.W1 = s.W1 - s.alpha*s.dsc1.momentum(s.l1a.gradientW);
+            s.W2 = s.W2 - s.alpha*s.dsc2.momentum(s.l2a.gradientW);
+            s.W3 = s.W3 - s.alpha*s.dsc3.momentum(s.l3a.gradientW);
+            s.W4 = s.W4 - s.alpha*s.dsc4.momentum(s.l4a.gradientW);
+          elseif (strcmp(s.opt,"adam"))
+            s.W1 = s.W1 - s.alpha*s.dsc1.adam(s.l1a.gradientW);
+            s.W2 = s.W2 - s.alpha*s.dsc2.adam(s.l2a.gradientW);
+            s.W3 = s.W3 - s.alpha*s.dsc3.adam(s.l3a.gradientW);
+            s.W4 = s.W4 - s.alpha*s.dsc4.adam(s.l4a.gradientW);
+          else
+            s.W1 = s.W1 - s.alpha*s.dsc1.pure(s.l1a.gradientW);
+            s.W2 = s.W2 - s.alpha*s.dsc2.pure(s.l2a.gradientW);
+            s.W3 = s.W3 - s.alpha*s.dsc3.pure(s.l3a.gradientW);
+            s.W4 = s.W4 - s.alpha*s.dsc4.pure(s.l4a.gradientW);
+          endif
           
           ##Forward prop Validation
           y1a = s.l1a.forward(s.W1,Xval);  #se combinan datos y pesos
@@ -200,11 +214,6 @@ classdef model < handle
       plot_colors(y4b,s.clases);
       
     endfunction
-    
-    
-    ##Funcion para el test
-    ##...
-    
-    
+
   endmethods
 endclassdef

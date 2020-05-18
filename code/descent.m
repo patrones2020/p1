@@ -13,7 +13,7 @@ classdef descent < handle
     function dsc = descent(beta, beta2)
       dsc.beta = beta;
       dsc.beta2 = beta2;
-      dsc.v = []
+      dsc.v = [];
       dsc.s = [];
     endfunction
     

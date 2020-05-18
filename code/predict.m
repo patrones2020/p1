@@ -4,9 +4,11 @@ clear classes;
 close all;
 pkg load statistics;
 
+## Selecion de parametros para la prediccion
+## Usar los mismos utilizados para el entrenamiento
 numClasses = 5;
 numDatos = 1000;
-[Xraw,Yraw] = create_data(numDatos,numClasses, 'curved');
+[Xraw,Yraw] = create_data(numDatos,numClasses, 'pie');
 
 ann = model();
 
