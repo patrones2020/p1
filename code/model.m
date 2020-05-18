@@ -20,7 +20,8 @@ classdef model < handle
     l4a = fullyConnectedBiased();
     l4b = sigmoide();
     
-    lf = cross_entropy(); #layer final, para calculo de error
+    lf = MSE(); #layer final, para calculo de error de entrenamiento
+    lfVal = MSE(); #layer final, para calculo de error de validacion
     
     #Pesos
     W1 = [];
@@ -80,8 +81,9 @@ classdef model < handle
     endfunction
     
     ##Funcion para entrenar los datos sin validacion
-    function train(s,Xraw,Yraw)
+    function train(s,Xraw,Yraw,Xval,Yval)
       Jacumulados = [];
+      JacumuladosVal = [];
       numEpochs = [];
       for (i = 1:s.epochs)
         for (j = 1:rows(Xraw)/s.minilote)
@@ -90,7 +92,7 @@ classdef model < handle
           X = Xraw(k(1:s.minilote),:); #toma una muestra de X, de tamaño = minilote
           Y = Yraw(k(1:s.minilote),:);
           
-          ## Forward prop
+          ## Forward prop Train
           y1a = s.l1a.forward(s.W1,X);  #se combinan datos y pesos
           y1b = s.l1b.forward(y1a);   #se pasa por funcion de activacion
           
@@ -126,14 +128,43 @@ classdef model < handle
           s.W2 = s.W2 - s.alpha*s.dsc2.momentum(s.l2a.gradientW);
           s.W3 = s.W3 - s.alpha*s.dsc3.momentum(s.l3a.gradientW);
           s.W4 = s.W4 - s.alpha*s.dsc4.momentum(s.l4a.gradientW);
+          
+          ##Forward prop Validation
+          y1a = s.l1a.forward(s.W1,Xval);  #se combinan datos y pesos
+          y1b = s.l1b.forward(y1a);   #se pasa por funcion de activacion
+          
+          y2a = s.l2a.forward(s.W2,y1b);
+          y2b = s.l2b.forward(y2a);
+          
+          y3a = s.l3a.forward(s.W3,y2b);
+          y3b = s.l3b.forward(y3a);
+          
+          y3a = s.l3a.forward(s.W3,y2b);
+          y3b = s.l3b.forward(y3a);
+          
+          y4a = s.l4a.forward(s.W4,y3b);
+          y4b = s.l4b.forward(y4a);
+          
+          yfval = s.lfVal.backward(y4b,Yval);
+          
         endfor
         J = s.lf.error();
         Jacumulados = [Jacumulados;J];
+        JVal = s.lfVal.error();
+        JacumuladosVal = [JacumuladosVal;JVal]; 
         numEpochs = [numEpochs; i];
         
         disp(["Epoca: ", num2str(i),"/",num2str(s.epochs),"  J: ",num2str(J)]);
       endfor
-      plot_loss(numEpochs,Jacumulados); ##Grafica el error vs epocas
+      figure
+      hold on
+      plot_loss(numEpochs,Jacumulados,"y"); ##Grafica el error vs epocas
+      plot_loss(numEpochs,JacumuladosVal,"b");
+      Legend=cell(2,1);
+      Legend{1}=strcat('Train');
+      Legend{2}=strcat('Validation');
+      legend(Legend);
+      
     endfunction
     
     ## Funcion para predecir y plotear
