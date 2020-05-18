@@ -20,13 +20,19 @@ classdef model < handle
     l4a = fullyConnectedBiased();
     l4b = sigmoide();
     
-    lf = MSE(); #layer final, para calculo de error
+    lf = cross_entropy(); #layer final, para calculo de error
     
     #Pesos
     W1 = [];
     W2 = [];
     W3 = [];
     W4 = [];
+    
+    #descenso
+    dsc1 = descent(0.9, 0.99);
+    dsc2 = descent(0.9, 0.99);
+    dsc3 = descent(0.9, 0.99);
+    dsc4 = descent(0.9, 0.99);
   endproperties
   
   methods
@@ -81,7 +87,7 @@ classdef model < handle
         for (j = 1:rows(Xraw)/s.minilote)
           ## Seleccion de mini lote
           k = randperm(rows(Xraw)); #crea un vector con valores random de 1 a n, sin repetir
-          X = Xraw(k(1:s.minilote),:); #toma una muestra de X, de tamaño = minilote
+          X = Xraw(k(1:s.minilote),:); #toma una muestra de X, de tamaÃ±o = minilote
           Y = Yraw(k(1:s.minilote),:);
           
           ## Forward prop
@@ -116,10 +122,10 @@ classdef model < handle
           s.l1a.backward(s.l1b.gradient);
           
           ## Calculo de pesos
-          s.W1 = s.W1 - s.alpha*s.l1a.gradientW;
-          s.W2 = s.W2 - s.alpha*s.l2a.gradientW;
-          s.W3 = s.W3 - s.alpha*s.l3a.gradientW;
-          s.W4 = s.W4 - s.alpha*s.l4a.gradientW;
+          s.W1 = s.W1 - s.alpha*s.dsc1.momentum(s.l1a.gradientW);
+          s.W2 = s.W2 - s.alpha*s.dsc2.momentum(s.l2a.gradientW);
+          s.W3 = s.W3 - s.alpha*s.dsc3.momentum(s.l3a.gradientW);
+          s.W4 = s.W4 - s.alpha*s.dsc4.momentum(s.l4a.gradientW);
         endfor
         J = s.lf.error();
         Jacumulados = [Jacumulados;J];
