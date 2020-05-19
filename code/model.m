@@ -95,20 +95,7 @@ classdef model < handle
           Y = Yraw(k(1:s.minilote),:);
           
           ## Forward prop Train
-          y1a = s.l1a.forward(s.W1,X);  #se combinan datos y pesos
-          y1b = s.l1b.forward(y1a);   #se pasa por funcion de activacion
-          
-          y2a = s.l2a.forward(s.W2,y1b);
-          y2b = s.l2b.forward(y2a);
-          
-          y3a = s.l3a.forward(s.W3,y2b);
-          y3b = s.l3b.forward(y3a);
-          
-          y3a = s.l3a.forward(s.W3,y2b);
-          y3b = s.l3b.forward(y3a);
-          
-          y4a = s.l4a.forward(s.W4,y3b);
-          y4b = s.l4b.forward(y4a);
+          y4b = forward_prop(s,X);
           
           ## Backward prop
           yf = s.lf.backward(y4b,Y); #gradiente de J con respecto a Y
@@ -144,20 +131,7 @@ classdef model < handle
           endif
           
           ##Forward prop Validation
-          y1a = s.l1a.forward(s.W1,Xval);  #se combinan datos y pesos
-          y1b = s.l1b.forward(y1a);   #se pasa por funcion de activacion
-          
-          y2a = s.l2a.forward(s.W2,y1b);
-          y2b = s.l2b.forward(y2a);
-          
-          y3a = s.l3a.forward(s.W3,y2b);
-          y3b = s.l3b.forward(y3a);
-          
-          y3a = s.l3a.forward(s.W3,y2b);
-          y3b = s.l3b.forward(y3a);
-          
-          y4a = s.l4a.forward(s.W4,y3b);
-          y4b = s.l4b.forward(y4a);
+          y4b = forward_prop(s,Xval);
           
           yfval = s.lfVal.backward(y4b,Yval);
           
@@ -192,20 +166,7 @@ classdef model < handle
       Pixels = [GX(:) GY(:)];
 
       ## Forward prop
-      y1a = s.l1a.forward(s.W1,Pixels);  #se combinan datos y pesos
-      y1b = s.l1b.forward(y1a);   #se pasa por funcion de activacion
-      
-      y2a = s.l2a.forward(s.W2,y1b);
-      y2b = s.l2b.forward(y2a);
-      
-      y3a = s.l3a.forward(s.W3,y2b);
-      y3b = s.l3b.forward(y3a);
-      
-      y3a = s.l3a.forward(s.W3,y2b);
-      y3b = s.l3b.forward(y3a);
-      
-      y4a = s.l4a.forward(s.W4,y3b);
-      y4b = s.l4b.forward(y4a);
+      y4b = forward_prop(s,Pixels);
       
       ## Plot de datos
       plot_data(Xraw,Yraw);
