@@ -1,3 +1,4 @@
+ 
 clc;
 clear;
 clear classes;
@@ -10,15 +11,15 @@ numDatos = 1000;    #cant. de datos de entrenamiento
 numDatosVal = 100;  #cant. de datos de validacion
 
 ## Creacion de datos
-[Xraw,Yraw] = create_data(numDatos,numClasses, 'pie');
-[Xval,Yval] = create_data(numDatosVal,numClasses, 'pie');
+[Xraw,Yraw] = create_data(numDatos,numClasses, 'vertical');
+[Xval,Yval] = create_data(numDatosVal,numClasses, 'vertical');
 
 ## Creacion de la red neuronal
 ann = model();
 
 ## Seleccion de valores para entrenamiento
 ann.alpha = 0.3;    #tasa de aprendizaje
-ann.minilote = 100; #tamaño de minilote
+ann.minilote = 100; #tamaï¿½o de minilote
 ann.epochs = 3000;  #numero de epocas de entrenamiento
 ann.opt = 'momentum';   #opciones de optimizacion: 'adam', 'momentum', 'pure'
 
@@ -45,4 +46,3 @@ endif
 ## Se entrena la red y se guardan los pesos finales
 ann.train(Xraw,Yraw,Xval,Yval);
 ann.save(file);
-

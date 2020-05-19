@@ -8,7 +8,8 @@ pkg load statistics;
 ## Usar los mismos utilizados para el entrenamiento
 numClasses = 5;
 numDatos = 1000;
-[Xraw,Yraw] = create_data(numDatos,numClasses, 'pie');
+
+[Xraw,Yraw] = create_data(numDatos,numClasses, 'vertical');
 
 ann = model();
 
@@ -17,6 +18,7 @@ file = "weights.dat";
 if (exist(file,"file") == 2)
   ann.load(file);
   ann.predict(Xraw,Yraw);
+  ann.confusion(Xraw,Yraw);
 else
-  disp("No fue posible encontrar el archivo weights.dat")
+  disp("No fue posible encontrar el archivo weights.dat");
 endif
