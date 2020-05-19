@@ -38,12 +38,14 @@ function plot_colors(FZ,numClasses,X,Y)
   greenChnl = reshape(cwimg(2,:),size(GX));
   blueChnl  = reshape(cwimg(3,:),size(GX));
    
-  mixed = flip(cat(3,redChnl,greenChnl,blueChnl),1);
+  mixed = cat(3,redChnl,greenChnl,blueChnl);
   figure("name","Clases segun probabilidades");;
   
   #resize de la figura
   him = imshow(mixed, []);
   set(him, 'XData', [-1, 1], 'YData', [-1,1]);
+  him = flip(him ,1); % vertical flip the image.
+  axis xy;
   axis([-1 1 -1 1]);
   
   axis on;
@@ -53,7 +55,7 @@ function plot_colors(FZ,numClasses,X,Y)
   ## Plot de la clase ganadora
   [maxprob,maxk] = max(FZ);
     
-  winner=flip(uint8(reshape(maxk,size(GX))),1);
+  winner=uint8(reshape(maxk,size(GX)));
           
   wimg=ind2rgb(winner,[0,0,0;cmap]);
   figure("name","Clases ganadoras");
@@ -61,6 +63,8 @@ function plot_colors(FZ,numClasses,X,Y)
   #resize de la figura
   him = imshow(wimg, []);
   set(him, 'XData', [-1, 1], 'YData', [-1,1]);
+  him = flip(him ,1); % vertical flip the image.
+  axis xy;
   axis([-1 1 -1 1]);
   
   axis on;
@@ -69,11 +73,15 @@ function plot_colors(FZ,numClasses,X,Y)
   
   ## Plot de datos sobre los colores
   figure("name","Datos y predicción");
-  him = imshow(wimg, []);
+  him = imshow(wimg);
+  him = flip(him ,1); % vertical flip the image.
   set(him, 'XData', [-1, 1], 'YData', [-1,1]);
+  axis xy;
   axis([-1 1 -1 1]);
+
   hold on;
   plot_data(X,Y,"brighter");
   title("Datos y predicción");
+  axis on;
 
 endfunction
