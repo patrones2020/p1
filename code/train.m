@@ -1,3 +1,4 @@
+ 
 clc;
 clear;
 clear classes;
@@ -6,7 +7,7 @@ pkg load statistics;
 
 numClasses = 5;
 numDatos = 1000;
-[Xraw,Yraw] = create_data(numDatos,numClasses, 'curved');
+[Xraw,Yraw] = create_data(numDatos,numClasses, 'vertical');
 
 ann = model();
 
@@ -34,4 +35,3 @@ endif
 ann.train(Xraw,Yraw);
 
 ann.save(file);
-
