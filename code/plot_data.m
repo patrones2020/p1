@@ -59,7 +59,6 @@ function plot_data(X,Y,mono=[])
     colors=ones(rows(colors),1)*reshape(mono,1,3);
   endif
   
-  figure("name","Datos");
   for i=[1:columns(Y)]
     ## Select data for the current i-th class
     xx=X(idx==i,1);
@@ -78,6 +77,5 @@ function plot_data(X,Y,mono=[])
 
   daspect([1,1]);
   grid;
-  title("Datos");
   
 endfunction

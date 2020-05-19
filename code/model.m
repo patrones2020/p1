@@ -12,11 +12,11 @@ classdef model < handle
     dimensionX = 2; ##Cantidad de features o columnas del conjunto de datos
     ##Capas
     l1a = fullyConnectedBiased(); #combinacion
-    l1b = relu();                 #activacion
+    l1b = sigmoide();                 #activacion
     l2a = fullyConnectedBiased();
-    l2b = relu();
+    l2b = sigmoide();
     l3a = fullyConnectedBiased();
-    l3b = relu();
+    l3b = sigmoide();
     l4a = fullyConnectedBiased();
     l4b = sigmoide();
     
@@ -168,11 +168,8 @@ classdef model < handle
       ## Forward prop
       y4b = forward_prop(s,Pixels);
       
-      ## Plot de datos
-      plot_data(Xraw,Yraw);
-      
-      ## Plot de prediccion
-      plot_colors(y4b,s.clases);
+      ## Plot de datos y prediccion
+      plot_colors(y4b,s.clases,Xraw,Yraw);
       
     endfunction
 

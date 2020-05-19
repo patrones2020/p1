@@ -1,7 +1,7 @@
 ## Plot de resultados de la prediccion
 
 ## FZ es la matriz de valores predichos
-function plot_colors(FZ,numClasses)
+function plot_colors(FZ,numClasses,X,Y)
   
   ## Solo importa la dimension de GX
   ## En este caso se obtiene de FZ
@@ -25,6 +25,11 @@ function plot_colors(FZ,numClasses)
           0.6,0.8,0.3;
           0.1,0.4,0.6;
           0.5,0.5,0.5];
+  
+  ## Plot de datos
+  figure("name","Datos");
+  plot_data(X,Y);
+  title("Datos");
   
   ## Plot segun probabilidades
   ccmap = cmap(1:numClasses,:);
@@ -60,5 +65,15 @@ function plot_colors(FZ,numClasses)
   
   axis on;
   title("Clases ganadoras");
+  
+  
+  ## Plot de datos sobre los colores
+  figure("name","Datos y predicción");
+  him = imshow(wimg, []);
+  set(him, 'XData', [-1, 1], 'YData', [-1,1]);
+  axis([-1 1 -1 1]);
+  hold on;
+  plot_data(X,Y,"brighter");
+  title("Datos y predicción");
 
 endfunction
