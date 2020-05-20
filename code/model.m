@@ -18,10 +18,10 @@ classdef model < handle
     l3a = fullyConnectedBiased();
     l3b = sigmoide();
     l4a = fullyConnectedBiased();
-    l4b = sigmoide();
+    l4b = softmax();
     
-    lf = MSE(); #layer final, para calculo de error de entrenamiento
-    lfVal = MSE(); #layer final, para calculo de error de validacion
+    lf = cross_entropyP(); #layer final, para calculo de error de entrenamiento
+    lfVal = cross_entropyP(); #layer final, para calculo de error de validacion
     
     opt = "pure"; #metodo de optimizacion
     
@@ -254,8 +254,7 @@ classdef model < handle
     endfunction
     
     
-    ##Funcion para el test
-    ##...
+
     
   endmethods
 endclassdef
