@@ -216,7 +216,12 @@ classdef model < handle
       recall = zeros(1,columns(Yraw)); #inicializa arreglo de exhaustividad
       
       for(i = 1:rows(conf))
-        recall(i) = conf(i,i) / sum(conf(i,:)); # True
+        posCond = sum(conf(i,:));
+        if posCond == 0
+          recall(i) = 0
+        else  
+          recall(i) = conf(i,i) / posCond; # True
+        endif
       endfor
       
       ## Calculo de la precision
@@ -224,7 +229,12 @@ classdef model < handle
       precision = zeros(1,columns(Yraw));
       
       for(i = 1:columns(conf))
-        precision(i) = conf(i,i) / sum(conf(:,i)); 
+        predPosCond = sum(conf(:,i));
+        if predPosCond == 0
+          precision(i) = 0;
+        else  
+          precision(i) = conf(i,i) / predPosCond;
+        endif
       endfor
       
       ## Calculo de f1
