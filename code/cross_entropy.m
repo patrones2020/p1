@@ -52,12 +52,12 @@ classdef cross_entropy < handle
     endfunction  
     
     ## Calculo del error
-    function y = error(s)
+    function y = error(s,Ypred,Y)
       a = 0;
-      for(i = 1: rows(s.inputsY))
-        a += s.xent(s.inputsY(i,:),s.inputsYpred(i,:));
+      for(i = 1: rows(Y))
+        a += s.xent(Y(i,:),Ypred(i,:));
       endfor
-      s.output = -a / rows(s.inputsY);
+      s.output = -a / rows(Y);
       y = s.output;
       s.gradient = [];
     endfunction

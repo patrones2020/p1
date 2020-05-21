@@ -11,8 +11,8 @@ numDatos = 1000;    #cant. de datos de entrenamiento
 numDatosVal = 100;  #cant. de datos de validacion
 
 ## Creacion de datos
-[Xraw,Yraw] = create_data(numDatos,numClasses, 'radial');
-[Xval,Yval] = create_data(numDatosVal,numClasses, 'radial');
+[Xraw,Yraw] = create_data(numDatos,numClasses, 'curved');
+[Xval,Yval] = create_data(numDatosVal,numClasses, 'curved');
 
 ## Creacion de la red neuronal
 ann = model();
@@ -21,7 +21,7 @@ ann = model();
 ann.alpha = 0.03;    #tasa de aprendizaje
 ann.minilote = 100; #tama�o de minilote
 ann.epochs = 5000;  #numero de epocas de entrenamiento
-ann.opt = 'pure';   #opciones de optimizacion: 'adam', 'momentum', 'pure'
+ann.opt = 'adam';   #opciones de optimizacion: 'adam', 'momentum', 'pure'
 
 ## Cantidad de neuronas por capa (4 capas actualmente)
 ## la cant. de neuronas de la ultima capa = numClasses por default

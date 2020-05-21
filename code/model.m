@@ -20,8 +20,7 @@ classdef model < handle
     l4a = fullyConnectedBiased();
     l4b = softmax();
     
-    lf = cross_entropyP(); #layer final, para calculo de error de entrenamiento
-    lfVal = cross_entropyP(); #layer final, para calculo de error de validacion
+    lf = cross_entropy(); #layer final, para calculo de error de entrenamiento
     
     opt = "pure"; #metodo de optimizacion
     
@@ -86,10 +85,17 @@ classdef model < handle
     
     ##Funcion para entrenar los datos sin validacion
     function train(s,Xraw,Yraw,Xval,Yval)
+      
+      ## Variables para acumular los errores para el plot
       Jacumulados = [];
       JacumuladosVal = [];
       numEpochs = [];
       for (i = 1:s.epochs)
+        
+        ## Variables para guardar los errores de cada iteracion, en cada epoca
+        Jiter = [];
+        JiterVal = [];
+        
         for (j = 1:rows(Xraw)/s.minilote)
           ## Seleccion de mini lote
           k = randperm(rows(Xraw)); #crea un vector con valores random de 1 a n, sin repetir
@@ -134,18 +140,29 @@ classdef model < handle
           endif
           
           ##Forward prop Validation
-          y4b = forward_prop(s,Xval);
+          y4bVal = forward_prop(s,Xval);
           
-          yfval = s.lfVal.backward(y4b,Yval);
+          ## Calculo de error en cada iteracion dentro de la epoca
+          J = s.lf.error(y4b,Y);
+          Jiter = [Jiter;J];
+          
+          JVal = s.lf.error(y4bVal,Yval);
+          JiterVal = [JiterVal;JVal];
           
         endfor
-        J = s.lf.error();
-        Jacumulados = [Jacumulados;J];
-        JVal = s.lfVal.error();
-        JacumuladosVal = [JacumuladosVal;JVal]; 
-        numEpochs = [numEpochs; i];
         
-        disp(["Epoca: ", num2str(i),"/",num2str(s.epochs),"  J: ",num2str(J)]);
+        ## Se calcula el promedio del error en cada iteracion (error por epoca)
+        Jprom = sum(Jiter)/length(Jiter);
+        JpromVal = sum(JiterVal)/length(JiterVal);
+        
+        ## Se guardan los valores del error de cada epoca para el plot
+        
+        Jacumulados = [Jacumulados; Jprom];
+        JacumuladosVal = [JacumuladosVal; JpromVal];
+        
+        numEpochs = [numEpochs; i]; # Lleva el numero de epocas para el plot
+        
+        disp(["Epoca: ", num2str(i),"/",num2str(s.epochs),"  J: ",num2str(Jprom)]);
       endfor
       figure
       hold on
@@ -181,22 +198,9 @@ classdef model < handle
     function confusion(s,Xraw,Yraw)
 
       ## Forward prop
-      y1a = s.l1a.forward(s.W1,Xraw);  #se combinan datos y pesos
-      y1b = s.l1b.forward(y1a);   #se pasa por funcion de activacion
+      y4b = forward_prop(s,Xraw);
       
-      y2a = s.l2a.forward(s.W2,y1b);
-      y2b = s.l2b.forward(y2a);
-      
-      y3a = s.l3a.forward(s.W3,y2b);
-      y3b = s.l3b.forward(y3a);
-      
-      y3a = s.l3a.forward(s.W3,y2b);
-      y3b = s.l3b.forward(y3a);
-      
-      y4a = s.l4a.forward(s.W4,y3b);
-      y4b = s.l4b.forward(y4a);
-      
-      Ypred = y4a;
+      Ypred = y4b;
 
       ## Calculo de la matriz de prediccion
       
@@ -235,9 +239,6 @@ classdef model < handle
       
       ##Display de metricas 
       
-      #disp(Yraw);
-      #disp(Ypred);
-      
       disp("matriz de confusion");
       disp(conf);
       
@@ -249,12 +250,8 @@ classdef model < handle
       
       disp("f1");
       disp(f1);
-      
-      
+           
     endfunction
-    
-    
-
     
   endmethods
 endclassdef

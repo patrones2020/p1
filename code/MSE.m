@@ -34,10 +34,11 @@ classdef MSE < handle
     endfunction
     
     ## Calculo del error
-    function y = error(s)
-      s.output = (1/rows(s.inputsY))*sum((vecnorm((s.inputsYpred-s.inputsY)')').^2);
+    function y = error(s,Ypred,Y)
+      s.output = (1/rows(Y))*sum((vecnorm((Ypred-Y)')').^2);
       y = s.output;
       s.gradient = [];
     endfunction
+    
   endmethods
 endclassdef
