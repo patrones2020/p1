@@ -48,16 +48,17 @@ classdef cross_entropy < handle
     
     #entropía cruzada de vectores columna
     function j = xent(s,y,ypred)
-      j = y*log(ypred');
+      j = -sum(log(sum(y .* ypred,2)));
     endfunction  
     
     ## Calculo del error
     function y = error(s,Ypred,Y)
-      a = 0;
-      for(i = 1: rows(Y))
-        a += s.xent(Y(i,:),Ypred(i,:));
-      endfor
-      s.output = -a / rows(Y);
+      #a = 0;
+      #for(i = 1: rows(Y))
+      #  a += s.xent(Y(i,:),Ypred(i,:));
+      #endfor
+      a = s.xent(Ypred,Y);
+      s.output = a / rows(Y);
       y = s.output;
       s.gradient = [];
     endfunction

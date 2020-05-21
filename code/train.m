@@ -20,7 +20,7 @@ ann = model();
 ## Seleccion de valores para entrenamiento
 ann.alpha = 0.03;    #tasa de aprendizaje
 ann.minilote = 100; #tama�o de minilote
-ann.epochs = 5000;  #numero de epocas de entrenamiento
+ann.epochs = 2000;  #numero de epocas de entrenamiento
 ann.opt = 'adam';   #opciones de optimizacion: 'adam', 'momentum', 'pure'
 
 ## Cantidad de neuronas por capa (4 capas actualmente)
@@ -45,4 +45,5 @@ endif
 
 ## Se entrena la red y se guardan los pesos finales
 ann.train(Xraw,Yraw,Xval,Yval);
+ann.confusion(Xraw,Yraw);
 ann.save(file);
