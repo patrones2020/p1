@@ -11,8 +11,8 @@ numDatos = 1000;    #cant. de datos de entrenamiento
 numDatosVal = 100;  #cant. de datos de validacion
 
 ## Creacion de datos
-[Xraw,Yraw] = create_data(numDatos,numClasses, 'vertical');
-[Xval,Yval] = create_data(numDatosVal,numClasses, 'vertical');
+[Xraw,Yraw] = create_data(numDatos,numClasses, 'spirals');
+[Xval,Yval] = create_data(numDatosVal,numClasses, 'spirals');
 
 ## Creacion de la red neuronal
 ann = model();

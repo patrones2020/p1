@@ -2,6 +2,7 @@
 
 classdef descent < handle
   properties
+    method;
     beta;
     beta2;
     s;
@@ -10,15 +11,12 @@ classdef descent < handle
   endproperties
   
   methods
-    function dsc = descent(beta, beta2)
+    function dsc = descent(method, beta, beta2)
+      dsc.method = method;
       dsc.beta = beta;
       dsc.beta2 = beta2;
       dsc.v = [];
       dsc.s = [];
-    endfunction
-    
-    function v = pure(dsc, grad)
-      v = grad;
     endfunction
     
     #en la primera iteracion deja no hay filtro
@@ -40,5 +38,16 @@ classdef descent < handle
       endif
       v = dsc.momentum(grad) ./ sqrt(dsc.s + dsc.epsilon);
     endfunction
+    
+    function v = filter(dsc, grad) 
+      if(strcmp(dsc.method, "momentum"))
+        v = dsc.momentum(grad);
+      elseif(strcmp(dsc.method, "adam"))
+        v = dsc.adam(grad);
+      else
+        v = grad;
+      endif
+    endfunction
+    
   endmethods
 endclassdef

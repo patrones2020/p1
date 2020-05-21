@@ -9,7 +9,7 @@ pkg load statistics;
 numClasses = 5;
 numDatos = 1000;
 
-[Xraw,Yraw] = create_data(numDatos,numClasses, 'vertical');
+[Xraw,Yraw] = create_data(numDatos,numClasses, 'spirals');
 
 ann = model();
 

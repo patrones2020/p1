@@ -1,8 +1,9 @@
+ 
 ###Clase model
 
 classdef model < handle
   properties
-    alpha = 0.03; #Learning rate
+    alpha = 0.3; #Learning rate
     epochs = 2500;
     minilote = 100; ##Tamano del minilote
     clases = 5;
@@ -18,10 +19,10 @@ classdef model < handle
     l3a = fullyConnectedBiased();
     l3b = sigmoide();
     l4a = fullyConnectedBiased();
-    l4b = sigmoide();
+    l4b = softmax();
     
-    lf = MSE(); #layer final, para calculo de error de entrenamiento
-    lfVal = MSE(); #layer final, para calculo de error de validacion
+    lf = cross_entropy(); #layer final, para calculo de error de entrenamiento
+    lfVal = cross_entropy(); #layer final, para calculo de error de validacion
     
     opt = "pure"; #metodo de optimizacion
     
@@ -34,10 +35,10 @@ classdef model < handle
     #descenso
     beta = 0.9;
     beta2 = 0.99;
-    dsc1 = descent(0.9, 0.99);
-    dsc2 = descent(0.9, 0.99);
-    dsc3 = descent(0.9, 0.99);
-    dsc4 = descent(0.9, 0.99);
+    dsc1 = descent("pure", 0.9, 0.99);
+    dsc2 = descent("pure", 0.9, 0.99);
+    dsc3 = descent("pure", 0.9, 0.99);
+    dsc4 = descent("pure", 0.9, 0.99);
   endproperties
   
   methods
@@ -115,23 +116,11 @@ classdef model < handle
           s.l1a.backward(s.l1b.gradient);
           
           ## Calculo de pesos
+          s.W1 = s.W1 - s.alpha*s.dsc1.filter(s.l1a.gradientW);
+          s.W2 = s.W2 - s.alpha*s.dsc2.filter(s.l2a.gradientW);
+          s.W3 = s.W3 - s.alpha*s.dsc3.filter(s.l3a.gradientW);
+          s.W4 = s.W4 - s.alpha*s.dsc4.filter(s.l4a.gradientW);
 
-          if (strcmp(s.opt,"momentum"))
-            s.W1 = s.W1 - s.alpha*s.dsc1.momentum(s.l1a.gradientW);
-            s.W2 = s.W2 - s.alpha*s.dsc2.momentum(s.l2a.gradientW);
-            s.W3 = s.W3 - s.alpha*s.dsc3.momentum(s.l3a.gradientW);
-            s.W4 = s.W4 - s.alpha*s.dsc4.momentum(s.l4a.gradientW);
-          elseif (strcmp(s.opt,"adam"))
-            s.W1 = s.W1 - s.alpha*s.dsc1.adam(s.l1a.gradientW);
-            s.W2 = s.W2 - s.alpha*s.dsc2.adam(s.l2a.gradientW);
-            s.W3 = s.W3 - s.alpha*s.dsc3.adam(s.l3a.gradientW);
-            s.W4 = s.W4 - s.alpha*s.dsc4.adam(s.l4a.gradientW);
-          else
-            s.W1 = s.W1 - s.alpha*s.dsc1.pure(s.l1a.gradientW);
-            s.W2 = s.W2 - s.alpha*s.dsc2.pure(s.l2a.gradientW);
-            s.W3 = s.W3 - s.alpha*s.dsc3.pure(s.l3a.gradientW);
-            s.W4 = s.W4 - s.alpha*s.dsc4.pure(s.l4a.gradientW);
-          endif
           
           ##Forward prop Validation
           y4b = forward_prop(s,Xval);
@@ -190,13 +179,10 @@ classdef model < handle
       y3a = s.l3a.forward(s.W3,y2b);
       y3b = s.l3b.forward(y3a);
       
-      y3a = s.l3a.forward(s.W3,y2b);
-      y3b = s.l3b.forward(y3a);
-      
       y4a = s.l4a.forward(s.W4,y3b);
       y4b = s.l4b.forward(y4a);
       
-      Ypred = y4a;
+      Ypred = y4b;
 
       ## Calculo de la matriz de prediccion
       
@@ -212,7 +198,12 @@ classdef model < handle
       recall = zeros(1,columns(Yraw)); #inicializa arreglo de exhaustividad
       
       for(i = 1:rows(conf))
-        recall(i) = conf(i,i) / sum(conf(i,:)); # True
+        posCond = sum(conf(i,:));
+        if posCond == 0
+          recall(i) = 0
+        else  
+          recall(i) = conf(i,i) / posCond; # True
+        endif
       endfor
       
       ## Calculo de la precision
@@ -220,7 +211,12 @@ classdef model < handle
       precision = zeros(1,columns(Yraw));
       
       for(i = 1:columns(conf))
-        precision(i) = conf(i,i) / sum(conf(:,i)); 
+        predPosCond = sum(conf(:,i));
+        if predPosCond == 0
+          precision(i) = 0;
+        else  
+          precision(i) = conf(i,i) / predPosCond;
+        endif
       endfor
       
       ## Calculo de f1
