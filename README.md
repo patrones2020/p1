@@ -12,7 +12,7 @@ la cantidad total de datos a entrenar y numDatosVal la cantidad de datos de vali
 creacion de datos, en esta parte se eligen entre ¨horizontal, vertical, pie, curved y spiral¨. Para finalizar se indican los valores para el entrenamiento 
 y se indica el tipo de optimizacion que desee, por ultimo se ejecuta este codigo.
 2. Si se desea hacer cambios en las capas de activacion se deben cambiar en el model.m de lo contrario está estructurado en 4 capas, 3 sigmoides y
-softmac cross entrophy para la última.
+softmax cross entrophy para la última.
 3. De tercera instancia se procede a ejecutar el archivo predict.m tomando encuenta que tambien en este codigo se debe cambiar el tipo de
 paramentros de la prediccion usada en el paso anterior, es decir si se quizo entrenar ¨horizontal¨ en este codigo se debe indicar que la prediccion tambien es horizontal,
 una vez se ejecute este codigo apareceran las graficas con las clases y sus predicciones.
