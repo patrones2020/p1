@@ -6,7 +6,7 @@ SANCHEZ MADRIZ SEBASTIAN
 
 Instrucciones de ejecución:
 
-1. Se debe ejecutar el archivo train.m, una vez se deben modificarciertos parametros dependiendo lo que se quiera predecir,
+1. Se debe ejecutar el archivo train.m, se deben modificarciertos parametros dependiendo lo que se quiera predecir,
 en la parte de Seleccion de datos para entrenamiento numClasses indica la cantidad de clases deseadas a crear, numDatos 
 la cantidad total de datos a entrenar y numDatosVal la cantidad de datos de validacion. En este mismo codigo esta la parte de
 creacion de datos, en esta parte se eligen entre ¨horizontal, vertical, pie, curved y spiral¨. Para finalizar se indican los valores para el entrenamiento 
